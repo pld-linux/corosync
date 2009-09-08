@@ -1,5 +1,5 @@
 # Conditional build:
-%bcond_without	apidocs		# do not build apidocs
+%bcond_with	apidocs		# build apidocs
 
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Name:		corosync
