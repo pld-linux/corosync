@@ -8,7 +8,7 @@ Release:	0.1
 License:	BSD
 Group:		Base
 Source0:	http://devresources.linux-foundation.org/dev/openais/downloads/%{name}-%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	dd40a6d6a89904e5e65116b560573aa7
+# Source0-md5:	257f5509f3da951ba84b596fedf42185
 URL:		http://www.corosync.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
