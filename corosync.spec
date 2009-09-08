@@ -4,7 +4,7 @@
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Name:		corosync
 Version:	1.0.0
-Release:	0.1
+Release:	1
 License:	BSD
 Group:		Base
 Source0:	http://devresources.linux-foundation.org/dev/openais/downloads/%{name}-%{version}/%{name}-%{version}.tar.gz
