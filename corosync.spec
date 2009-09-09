@@ -73,6 +73,9 @@ sed -i -e 's/\(^.*$\)/#\1/' $RPM_BUILD_ROOT/etc/corosync/corosync.conf
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post	libs -p /sbin/ldconfig
+%postun	libs -p /sbin/ldconfig
+
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS CHANGELOG README.devmap README.recovery SECURITY
