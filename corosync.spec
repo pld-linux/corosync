@@ -3,15 +3,16 @@
 
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Name:		corosync
-Version:	1.0.0
+Version:	1.1.2
 Release:	1
 License:	BSD
 Group:		Base
 Source0:	http://devresources.linux-foundation.org/dev/openais/downloads/%{name}-%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	257f5509f3da951ba84b596fedf42185
+# Source0-md5:	03ea8d775b2855fd3c0a1ed5e7705a86
 URL:		http://www.corosync.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	nss-devel
 %{?with_apidocs:BuildRequires:	doxygen}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -88,6 +89,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/corosync-keygen
 %attr(755,root,root) %{_sbindir}/corosync-objctl
 %attr(755,root,root) %{_sbindir}/corosync-pload
+%attr(755,root,root) %{_sbindir}/corosync-cpgtool
+%attr(755,root,root) %{_sbindir}/corosync-quorumtool
 %attr(755,root,root) %{_libdir}/lcrso/*.lcrso
 %{_mandir}/man5/*.5*
 %{_mandir}/man8/*.8*
