@@ -13,6 +13,7 @@ URL:		http://www.corosync.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	nss-devel
+BuildRequires:	pkgconfig
 %{?with_apidocs:BuildRequires:	doxygen}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
