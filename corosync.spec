@@ -3,12 +3,12 @@
 
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Name:		corosync
-Version:	1.1.2
+Version:	1.2.6
 Release:	1
 License:	BSD
 Group:		Base
 Source0:	http://devresources.linux-foundation.org/dev/openais/downloads/%{name}-%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	03ea8d775b2855fd3c0a1ed5e7705a86
+# Source0-md5:	82d91373585f0d48cb98a8599a237e48
 URL:		http://www.corosync.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -82,6 +82,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS CHANGELOG README.devmap README.recovery SECURITY
 %defattr(644,root,root,755)
+%attr(754,root,root) /etc/init.d/corosync
 %dir %{_sysconfdir}/corosync
 %verify(not md5 mtime size) %config(noreplace) %{_sysconfdir}/corosync/corosync.conf
 %attr(755,root,root) %{_sbindir}/corosync
@@ -115,6 +116,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %ghost %{_libdir}/liblogsys.so.4
 %attr(755,root,root) %{_libdir}/libpload.so.4.*.*
 %attr(755,root,root) %ghost %{_libdir}/libpload.so.4
+%attr(755,root,root) %{_libdir}/libsam.so.4.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsam.so.4
 %attr(755,root,root) %{_libdir}/libquorum.so.4.*.*
 %attr(755,root,root) %ghost %{_libdir}/libquorum.so.4
 %attr(755,root,root) %{_libdir}/libtotem_pg.so.4.*.*
@@ -133,6 +136,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libevs.so
 %{_libdir}/liblogsys.so
 %{_libdir}/libpload.so
+%{_libdir}/libsam.so
 %{_libdir}/libquorum.so
 %{_libdir}/libtotem_pg.so
 %{_libdir}/libvotequorum.so
@@ -150,6 +154,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/liblcr.a
 %{_libdir}/liblogsys.a
 %{_libdir}/libpload.a
+%{_libdir}/libsam.a
 %{_libdir}/libquorum.a
 %{_libdir}/libtotem_pg.a
 %{_libdir}/libvotequorum.a
