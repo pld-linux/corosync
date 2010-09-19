@@ -51,6 +51,7 @@ Summary:	Header files for Corosync libraries
 Summary(pl.UTF-8):	Pliki nagłówkowe bibliotek Corosync
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
+Conflicts:	openais-devel < 1.0
 
 %description devel
 This package contains the include files used to develop using Corosync
