@@ -1,7 +1,8 @@
 #
 # Conditional build:
 %bcond_with	apidocs		# build apidocs
-
+%bcond_with	rdma		# build with RDMA support
+#
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
@@ -14,9 +15,13 @@ Source0:	http://devresources.linux-foundation.org/dev/openais/downloads/%{name}-
 URL:		http://www.corosync.org/
 BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake
+%{?with_apidocs:BuildRequires:	doxygen}
+%if %{with rdma}
+BuildRequires:	libibverbs-devel
+BuildRequires:	librdmacm-devel
+%endif
 BuildRequires:	nss-devel
 BuildRequires:	pkgconfig
-%{?with_apidocs:BuildRequires:	doxygen}
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -77,9 +82,9 @@ Ten pakiet zawiera statyczne biblioteki Corosync.
 %{__automake}
 %configure \
 	--enable-nss \
+	%{?with_rdma:--enable-rdma} \
 	--with-initddir=/etc/rc.d/init.d \
 	--with-lcrso-dir=%{_libdir}/lcrso
-# --enable-rdma (BR: librdmacm, libibverbs)
 
 %{__make}
 
