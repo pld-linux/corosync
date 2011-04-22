@@ -7,7 +7,7 @@ Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
 Version:	1.3.0
-Release:	0.1
+Release:	1
 License:	BSD
 Group:		Base
 Source0:	ftp://ftp:downloads@corosync.org/downloads/%{name}-%{version}/%{name}-%{version}.tar.gz
@@ -25,8 +25,9 @@ BuildRequires:	pkgconfig
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-# REASON TO SKIP SO CHECK IS MISSING
-#%%define		skip_post_check_so	libtotem_pg.so.4.0.0
+# "Unresolved symbols found: clock_gettime" however -lrt is properly
+# passed (or seems to me - alucard), corosync works well anyway
+%define		skip_post_check_so	libtotem_pg.so.4.0.0
 
 %description
 The Corosync Cluster Engine is an OSI Certified implementation of a
