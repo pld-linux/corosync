@@ -7,7 +7,7 @@ Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
 Version:	1.3.0
-Release:	1
+Release:	0.1
 License:	BSD
 Group:		Base
 Source0:	ftp://ftp:downloads@corosync.org/downloads/%{name}-%{version}/%{name}-%{version}.tar.gz
@@ -25,7 +25,8 @@ BuildRequires:	pkgconfig
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		skip_post_check_so	libtotem_pg.so.4.0.0
+# REASON TO SKIP SO CHECK IS MISSING
+#%%define		skip_post_check_so	libtotem_pg.so.4.0.0
 
 %description
 The Corosync Cluster Engine is an OSI Certified implementation of a
@@ -45,8 +46,8 @@ This package contains the libraries of Corosync Cluster Engine, an OSI
 Certified implementation of a complete cluster engine.
 
 %description libs -l pl.UTF-8
-Ten pakiet zawiera biblioteki Corosync Cluster Engine - pełnego silnika
-klastrowego certyfikowanego przez OSI.
+Ten pakiet zawiera biblioteki Corosync Cluster Engine - pełnego
+silnika klastrowego certyfikowanego przez OSI.
 
 %package devel
 Summary:	Header files for Corosync libraries
@@ -92,14 +93,14 @@ Ten pakiet zawiera statyczne biblioteki Corosync.
 %{__make}
 
 %{?with_apidocs:%{__make} doxygen}
-    
+
 %install
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-%{__rm} -r $RPM_BUILD_ROOT/usr/share/doc/corosync
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/corosync
 
 sed -e 's/^/#/' $RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf.example \
 	>$RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf
