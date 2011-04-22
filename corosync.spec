@@ -12,6 +12,7 @@ License:	BSD
 Group:		Base
 Source0:	ftp://ftp:downloads@corosync.org/downloads/%{name}-%{version}/%{name}-%{version}.tar.gz
 # Source0-md5:	66a527d668b0f908db89be26c83ca7d6
+Patch0:		%{name}-makefile.patch
 URL:		http://www.corosync.org/
 BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake
@@ -24,10 +25,6 @@ BuildRequires:	nss-devel
 BuildRequires:	pkgconfig
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-# "Unresolved symbols found: clock_gettime" however -lrt is properly
-# passed (or seems to me - alucard), corosync works well anyway
-%define		skip_post_check_so	libtotem_pg.so.4.0.0
 
 %description
 The Corosync Cluster Engine is an OSI Certified implementation of a
@@ -79,6 +76,7 @@ Ten pakiet zawiera statyczne biblioteki Corosync.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__aclocal}

@@ -1,0 +1,11 @@
+--- corosync-1.3.0/exec/Makefile.am.orig	2011-04-22 12:56:16.220007990 +0000
++++ corosync-1.3.0/exec/Makefile.am	2011-04-22 12:57:07.016674021 +0000
+@@ -125,7 +125,7 @@ else
+ 	$(CC) $(LDFLAGS) $(CFLAGS) $(COVERAGE_LCRSO_EXTRA_LDFLAGS) -shared -Wl,-soname=$@ $^ -o $@
+ 
+ libtotem_pg.so.$(SONAME): $(TOTEM_OBJS)
+-	$(CC) -shared -o $@ \
++	$(CC) -shared -o $@ $(LIBS) \
+ 		-Wl,-soname=libtotem_pg.so.$(SOMAJOR) \
+ 		$(LDFLAGS) $^ $(nss_LIBS) $(rdmacm_LIBS) $(ibverbs_LIBS) -lpthread
+ 	ln -sf libtotem_pg.so.$(SONAME) libtotem_pg.so
