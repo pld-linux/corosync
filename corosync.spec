@@ -6,12 +6,12 @@
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
-Version:	1.2.8
+Version:	1.3.0
 Release:	1
 License:	BSD
 Group:		Base
-Source0:	http://devresources.linux-foundation.org/dev/openais/downloads/%{name}-%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	43e97ef0d964ccb4063f40a4478eb679
+Source0:	ftp://ftp:downloads@corosync.org/downloads/%{name}-%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	66a527d668b0f908db89be26c83ca7d6
 URL:		http://www.corosync.org/
 BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake
@@ -24,6 +24,8 @@ BuildRequires:	nss-devel
 BuildRequires:	pkgconfig
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		skip_post_check_so	libtotem_pg.so.4.0.0
 
 %description
 The Corosync Cluster Engine is an OSI Certified implementation of a
@@ -113,10 +115,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS CHANGELOG LICENSE README.devmap README.recovery SECURITY TODO
+%doc AUTHORS ChangeLog LICENSE README.devmap README.recovery SECURITY TODO
 %attr(754,root,root) /etc/rc.d/init.d/corosync
 %dir %{_sysconfdir}/corosync
 %verify(not md5 mtime size) %config(noreplace) %{_sysconfdir}/corosync/corosync.conf
+%attr(755,root,root) %{_bindir}/corosync-blackbox
 %attr(755,root,root) %{_sbindir}/corosync
 %attr(755,root,root) %{_sbindir}/corosync-cfgtool
 %attr(755,root,root) %{_sbindir}/corosync-cpgtool
