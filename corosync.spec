@@ -1,30 +1,37 @@
 #
 # Conditional build:
-%bcond_with	apidocs		# build apidocs
-%bcond_with	rdma		# build with RDMA support
+%bcond_with	apidocs		# build apidocs (man3 pages are provided anyway)
+%bcond_without	dbus		# DBus events
+%bcond_without	rdma		# RDMA support
+%bcond_without	snmp		# SNMP protocol support
 #
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
-Version:	1.3.1
+Version:	1.4.2
 Release:	1
 License:	BSD
 Group:		Base
 Source0:	ftp://ftp:downloads@corosync.org/downloads/%{name}-%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	c58459a009a3a9d0b9c00e276a190d90
+# Source0-md5:	061ee5522097fee69475b38a66bf1d6a
 Patch0:		%{name}-makefile.patch
 URL:		http://www.corosync.org/
 BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake
+%{?with_dbus:BuildRequires:	dbus-devel}
 %{?with_apidocs:BuildRequires:	doxygen}
 %if %{with rdma}
 BuildRequires:	libibverbs-devel
 BuildRequires:	librdmacm-devel
 %endif
+%{?with_snmp:BuildRequires:	net-snmp-devel}
 BuildRequires:	nss-devel
 BuildRequires:	pkgconfig
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+# short_service_name_get() is defined in executable
+%define		skip_post_check_so	libcoroipcs\.so.*
 
 %description
 The Corosync Cluster Engine is an OSI Certified implementation of a
@@ -74,6 +81,18 @@ This package contains the Corosync static libraries.
 %description static -l pl.UTF-8
 Ten pakiet zawiera statyczne biblioteki Corosync.
 
+%package -n mibs-corosync
+Summary:	Corosync SNMP MIB data
+Summary(pl.UTF-8):	Dane SNMP MIB dla Corosync
+Group:		Applications/System
+Requires:	mibs-dirs
+
+%description -n mibs-corosync
+Corosync SNMP MIB data.
+
+%description -n mibs-corosync -l pl.UTF-8
+Dane SNMP MIB dla Corosync.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -83,9 +102,12 @@ Ten pakiet zawiera statyczne biblioteki Corosync.
 %{__autoconf}
 %{__autoheader}
 %{__automake}
+# options not yet supported: monitoring, watchdog, augeas
 %configure \
+	%{?with_dbus:--enable-dbus} \
 	--enable-nss \
 	%{?with_rdma:--enable-rdma} \
+	%{?with_snmp:--enable-snmp} \
 	--with-initddir=/etc/rc.d/init.d \
 	--with-lcrso-dir=%{_libdir}/lcrso
 
@@ -103,7 +125,7 @@ rm -rf $RPM_BUILD_ROOT
 
 sed -e 's/^/#/' $RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf.example \
 	>$RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf
-%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf.example
+%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf.example*
 
 %{?with_apidocs:install doc/api/man/man3/* $RPM_BUILD_ROOT%{_mandir}/man3}
 
@@ -115,8 +137,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog LICENSE README.devmap README.recovery SECURITY TODO
+%doc AUTHORS ChangeLog LICENSE README.devmap README.recovery SECURITY TODO conf/corosync.conf.example*
 %attr(754,root,root) /etc/rc.d/init.d/corosync
+%attr(754,root,root) /etc/rc.d/init.d/corosync-notifyd
 %dir %{_sysconfdir}/corosync
 %verify(not md5 mtime size) %config(noreplace) %{_sysconfdir}/corosync/corosync.conf
 %attr(755,root,root) %{_bindir}/corosync-blackbox
@@ -125,6 +148,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/corosync-cpgtool
 %attr(755,root,root) %{_sbindir}/corosync-fplay
 %attr(755,root,root) %{_sbindir}/corosync-keygen
+%attr(755,root,root) %{_sbindir}/corosync-notifyd
 %attr(755,root,root) %{_sbindir}/corosync-objctl
 %attr(755,root,root) %{_sbindir}/corosync-pload
 %attr(755,root,root) %{_sbindir}/corosync-quorumtool
@@ -136,6 +160,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/corosync-cpgtool.8*
 %{_mandir}/man8/corosync-fplay.8*
 %{_mandir}/man8/corosync-keygen.8*
+%{_mandir}/man8/corosync-notifyd.8*
 %{_mandir}/man8/corosync-objctl.8*
 %{_mandir}/man8/corosync-pload.8*
 %{_mandir}/man8/corosync-quorumtool.8*
@@ -226,3 +251,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libquorum.a
 %{_libdir}/libtotem_pg.a
 %{_libdir}/libvotequorum.a
+
+%if %{with snmp}
+%files -n mibs-corosync
+%defattr(644,root,root,755)
+%{_datadir}/snmp/mibs/COROSYNC-MIB.txt
+%endif
