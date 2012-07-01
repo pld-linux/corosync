@@ -208,8 +208,6 @@ fi
 %config(noreplace) %{_sysconfdir}/corosync/corosync.xml.example
 %dir %{_datadir}/corosync
 %dir %{_datadir}/corosync/xml2conf.xsl
-%{_datadir}/corosync/corosync
-%{_datadir}/corosync/corosync-notifyd
 %{_mandir}/man8/corosync-xmlproc.8*
 %{_mandir}/man5/corosync.xml.5*
 %endif
