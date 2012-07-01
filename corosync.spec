@@ -1,4 +1,7 @@
 #
+# TODO:
+#	- wait for openais compatible with corosync 2.0 before setting full Release
+#
 # Conditional build:
 %bcond_with	apidocs		# build apidocs (man3 pages are provided anyway)
 %bcond_without	dbus		# DBus events
