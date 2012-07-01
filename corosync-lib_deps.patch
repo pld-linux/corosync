@@ -1,0 +1,24 @@
+diff -dur -x '*~' corosync-2.0.1.orig/exec/Makefile.am corosync-2.0.1/exec/Makefile.am
+--- corosync-2.0.1.orig/exec/Makefile.am	2012-07-01 10:53:36.000000000 +0200
++++ corosync-2.0.1/exec/Makefile.am	2012-07-01 10:55:31.786194954 +0200
+@@ -86,7 +86,7 @@
+ libtotem_pg.so.$(SONAME): $(TOTEM_OBJS)
+ 	$(CC) -shared -o $@ \
+ 		-Wl,-soname=libtotem_pg.so.$(SOMAJOR) \
+-		$(LDFLAGS) $^ $(nss_LIBS) $(rdmacm_LIBS) $(ibverbs_LIBS) -lpthread $(LIBS)
++		$(LDFLAGS) $^ $(nss_LIBS) $(rdmacm_LIBS) $(ibverbs_LIBS) $(LIBQB_LIBS) -lpthread $(LIBS)
+ 	ln -sf libtotem_pg.so.$(SONAME) libtotem_pg.so
+ 	ln -sf libtotem_pg.so.$(SONAME) libtotem_pg.so.$(SOMAJOR)
+ 
+diff -dur -x '*~' corosync-2.0.1.orig/lib/Makefile.am corosync-2.0.1/lib/Makefile.am
+--- corosync-2.0.1.orig/lib/Makefile.am	2012-05-22 08:51:00.000000000 +0200
++++ corosync-2.0.1/lib/Makefile.am	2012-07-01 10:56:17.943172941 +0200
+@@ -55,7 +55,7 @@
+ libquorum_a_SOURCES	= quorum.c
+ libvotequorum_a_SOURCES	= votequorum.c
+ libcmap_a_SOURCES	= cmap.c
+-SAM_LINKER_ADD		= -L. -lquorum -lcmap
++SAM_LINKER_ADD		= -L. -lquorum -lcmap $(LIBQB_LIBS)
+ libsam_a_SOURCES	= sam.c
+ 
+ noinst_HEADERS		= util.h \
