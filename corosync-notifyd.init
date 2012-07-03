@@ -1,0 +1,113 @@
+#!/bin/sh
+#
+# corosync-notifyd	Corosync Dbus and snmp notifier
+#
+# chkconfig: 2345 23 77
+# description: Corosync Dbus and snmp notifier
+# processname: corosync-notifyd-notifyd
+#
+### BEGIN INIT INFO
+# Provides:		corosync-notifyd-notifyd
+# Required-Start:	$corosync-notifyd $cman
+# Required-Stop:	$corosync-notifyd $cman
+# Default-Start:
+# Default-Stop:
+# Short-Description:	Starts and stops Corosync Notifier.
+# Description:		Starts and stops Corosync Notifier.
+### END INIT INFO
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+SEND_SNMP_TRAPS=no
+SEND_DBUS_SIGNALS=yes
+LOG_ALL_EVENTS=no
+
+[ -f /etc/sysconfig/corosync-notifyd ] && . /etc/sysconfig/corosync-notifyd
+
+start() {
+	# Check if the service is already running?
+	if [ -f /var/lock/subsys/corosync-notifyd ]; then
+		msg_already_running "Corosync Notifier"
+		return
+	fi
+	if [ -f /var/lock/subsys/openais ]; then
+		msg_already_running "Corosync Notifier (as openais)"
+		return
+	fi
+	if grep -q nocluster /proc/cmdline ; then
+		show "Disabled on boot"
+		RETVAL=1
+		return
+	fi
+
+	local options=""
+	if is_yes "$SEND_SNMP_TRAPS" ; then
+		options="$options -s"
+	fi
+	if [ -n "$SNMP_MANAGER" ] ; then
+		options="$options -m $SNMP_MANAGER"
+	fi
+	if is_yes "$SEND_DBUS_SIGNALS" ; then
+		options="$options -d"
+	fi
+	if is_yes "$LOG_ALL_EVENTS" ; then
+		options="$options -l"
+	fi
+	msg_starting "Corosync Notifier"
+	daemon /usr/sbin/corosync-notifyd "$options"
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/corosync-notifyd
+}
+
+stop() {
+	if [ ! -f /var/lock/subsys/corosync-notifyd ]; then
+		msg_not_running "Corosync Notifier"
+		return
+	fi
+
+	# Stop daemons.
+	msg_stopping "Corosync Notifier"
+	killproc /usr/sbin/corosync-notifyd
+	rm -f /var/lock/subsys/corosync-notifyd
+}
+
+condrestart() {
+	if [ ! -f /var/lock/subsys/corosync-notifyd ]; then
+		msg_not_running "Corosync Notifier"
+		RETVAL=$1
+		return
+	fi
+
+	stop
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart)
+	stop
+   	sleep 5
+	start
+	;;
+  try-restart)
+	condrestart 0
+	;;
+  force-reload)
+	condrestart 7
+	;;
+  status)
+	status corosync-notifyd
+	RETVAL=$?
+	;;
+*)
+	msg_usage "$0 {start|stop|restart|try-restart|force-reload|status}"
+	exit 3
+	;;
+esac
+exit $RETVAL
