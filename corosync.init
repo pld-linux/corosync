@@ -1,0 +1,96 @@
+#!/bin/sh
+#
+# corosync	Corosync Cluster Engine
+#
+# chkconfig: 2345 21 79
+# description: Corosync Cluster Engine
+# processname: corosync
+#
+### BEGIN INIT INFO
+# Provides:		corosync
+# Required-Start:	$network $syslog
+# Required-Stop:	$network $syslog
+# Default-Start:
+# Default-Stop:
+# Short-Description:	Starts and stops Corosync Cluster Engine.
+# Description:		Starts and stops Corosync Cluster Engine.
+### END INIT INFO
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+[ -f /etc/sysconfig/corosync ] && . /etc/sysconfig/corosync
+
+start() {
+	# Check if the service is already running?
+	if [ -f /var/lock/subsys/corosync ]; then
+		msg_already_running "Corosync Cluster Engine"
+		return
+	fi
+	if [ -f /var/lock/subsys/openais ]; then
+		msg_already_running "Corosync Cluster Engine (as openais)"
+		return
+	fi
+	if grep -q nocluster /proc/cmdline ; then
+		show "Disabled on boot"
+		RETVAL=1
+		return
+	fi
+
+	msg_starting "Corosync Cluster Engine"
+	daemon /usr/sbin/corosync
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/corosync
+}
+
+stop() {
+	if [ ! -f /var/lock/subsys/corosync ]; then
+		msg_not_running "Corosync Cluster Engine"
+		return
+	fi
+
+	# Stop daemons.
+	msg_stopping "Corosync Cluster Engine"
+	killproc /usr/sbin/corosync
+	rm -f /var/lock/subsys/corosync
+}
+
+condrestart() {
+	if [ ! -f /var/lock/subsys/corosync ]; then
+		msg_not_running "Corosync Cluster Engine"
+		RETVAL=$1
+		return
+	fi
+
+	stop
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart)
+	stop
+   	sleep 5
+	start
+	;;
+  try-restart)
+	condrestart 0
+	;;
+  force-reload)
+	condrestart 7
+	;;
+  status)
+	status corosync
+	RETVAL=$?
+	;;
+*)
+	msg_usage "$0 {start|stop|restart|try-restart|force-reload|status}"
+	exit 3
+	;;
+esac
+exit $RETVAL
