@@ -21,6 +21,9 @@ License:	BSD
 Group:		Base
 Source0:	ftp://ftp:downloads@corosync.org/downloads/%{name}-%{version}/corosync-%{version}.tar.gz
 # Source0-md5:	9e23f3f5594676455ff39ff363658155
+Source1:	%{name}.init
+Source2:	%{name}-notifyd.init
+Source3:	%{name}-notifyd.sysconfig
 Patch0:		%{name}-makefile.patch
 Patch1:		%{name}-lib_deps.patch
 Patch2:		%{name}-install.patch
@@ -139,8 +142,13 @@ This package contains corosync test agents.
 
 %{?with_apidocs:%{__make} doxygen}
 
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}-notifyd
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/%{name}-notifyd
+
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,/etc/sysconfig}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -157,17 +165,22 @@ sed -e 's/^/#/' $RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf.example \
 rm -rf $RPM_BUILD_ROOT
 
 %post
-/sbin/chkconfig --add corosync
-%service corosync restart "Corosync Cluster Engine"
-
-%systemd_post corosync.service
+/sbin/chkconfig --add %{name}
+/sbin/chkconfig --add %{name}-notifyd
+%service %{name} restart
+%service %{name}-notifyd restart
+%systemd_post %{name}.service
+%systemd_post %{name}-notifyd.service
 
 %preun
 if [ "$1" = "0" ]; then
-        %service corosync stop
-        /sbin/chkconfig --del corosync
+	%service -q %{name} stop
+	/sbin/chkconfig --del %{name}
+	%service -q %{name}-notifyd stop
+	/sbin/chkconfig --del %{name}-notifyd
 fi
-%systemd_preun corosync.service
+%systemd_preun %{name}.service
+%systemd_preun %{name}-notifyd.service
 
 %postun
 %systemd_reload
@@ -183,6 +196,7 @@ fi
 %endif
 %attr(754,root,root) /etc/rc.d/init.d/corosync
 %attr(754,root,root) /etc/rc.d/init.d/corosync-notifyd
+%verify(not md5 mtime size) %config(noreplace) /etc/sysconfig/%{name}-notifyd
 %dir %{_sysconfdir}/corosync
 %{systemdunitdir}/corosync.service
 %{systemdunitdir}/corosync-notifyd.service
