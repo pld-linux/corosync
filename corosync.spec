@@ -9,11 +9,14 @@ Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
 Version:	1.4.3
-Release:	2
+Release:	2.1
 License:	BSD
 Group:		Base
 Source0:	ftp://ftp:downloads@corosync.org/downloads/%{name}-%{version}/%{name}-%{version}.tar.gz
 # Source0-md5:	9e9943a7d9eb90fabd52d12b215c699c
+Source1:	%{name}.init
+Source2:	%{name}-notifyd.init
+Source3:	%{name}-notifyd.sysconfig
 Patch0:		%{name}-makefile.patch
 URL:		http://www.corosync.org/
 BuildRequires:	autoconf >= 2.61
@@ -117,6 +120,7 @@ Dane SNMP MIB dla Corosync.
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,/etc/sysconfig}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -127,10 +131,35 @@ sed -e 's/^/#/' $RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf.example \
 	>$RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf
 %{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf.example*
 
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}-notifyd
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/%{name}-notifyd
+
 %{?with_apidocs:install doc/api/man/man3/* $RPM_BUILD_ROOT%{_mandir}/man3}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post
+/sbin/chkconfig --add %{name}
+/sbin/chkconfig --add %{name}-notifyd
+%service %{name} restart
+%service %{name}-notifyd restart
+%systemd_post %{name}.service
+%systemd_post %{name}-notifyd.service
+
+%preun
+if [ "$1" = "0" ]; then
+	%service -q %{name} stop
+	/sbin/chkconfig --del %{name}
+	%service -q %{name}-notifyd stop
+	/sbin/chkconfig --del %{name}-notifyd
+fi
+%systemd_preun %{name}.service
+%systemd_preun %{name}-notifyd.service
+
+%postun
+%systemd_reload
 
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
@@ -140,6 +169,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS ChangeLog LICENSE README.devmap README.recovery SECURITY TODO conf/corosync.conf.example*
 %attr(754,root,root) /etc/rc.d/init.d/corosync
 %attr(754,root,root) /etc/rc.d/init.d/corosync-notifyd
+%verify(not md5 mtime size) %config(noreplace) /etc/sysconfig/%{name}-notifyd
 %dir %{_sysconfdir}/corosync
 %verify(not md5 mtime size) %config(noreplace) %{_sysconfdir}/corosync/corosync.conf
 %attr(755,root,root) %{_bindir}/corosync-blackbox
