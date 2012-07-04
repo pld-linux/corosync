@@ -2,14 +2,14 @@
 #
 # corosync-notifyd	Corosync Dbus and snmp notifier
 #
-# chkconfig: 2345 23 77
+# chkconfig: 2345 22 78
 # description: Corosync Dbus and snmp notifier
-# processname: corosync-notifyd-notifyd
+# processname: corosync-notifyd
 #
 ### BEGIN INIT INFO
-# Provides:		corosync-notifyd-notifyd
-# Required-Start:	$corosync-notifyd $cman
-# Required-Stop:	$corosync-notifyd $cman
+# Provides:		corosync-notifyd
+# Required-Start:	$corosync $cman
+# Required-Stop:	$corosync $cman
 # Default-Start:
 # Default-Stop:
 # Short-Description:	Starts and stops Corosync Notifier.
@@ -19,9 +19,7 @@
 # Source function library
 . /etc/rc.d/init.d/functions
 
-SEND_SNMP_TRAPS=no
-SEND_DBUS_SIGNALS=yes
-LOG_ALL_EVENTS=no
+COROSYNC_NOTIFYD_OPTS="-d"
 
 [ -f /etc/sysconfig/corosync-notifyd ] && . /etc/sysconfig/corosync-notifyd
 
@@ -41,21 +39,8 @@ start() {
 		return
 	fi
 
-	local options=""
-	if is_yes "$SEND_SNMP_TRAPS" ; then
-		options="$options -s"
-	fi
-	if [ -n "$SNMP_MANAGER" ] ; then
-		options="$options -m $SNMP_MANAGER"
-	fi
-	if is_yes "$SEND_DBUS_SIGNALS" ; then
-		options="$options -d"
-	fi
-	if is_yes "$LOG_ALL_EVENTS" ; then
-		options="$options -l"
-	fi
 	msg_starting "Corosync Notifier"
-	daemon /usr/sbin/corosync-notifyd "$options"
+	daemon /usr/sbin/corosync-notifyd $COROSYNC_NOTIFYD_OPTS
 	RETVAL=$?
 	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/corosync-notifyd
 }

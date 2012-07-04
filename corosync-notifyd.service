@@ -1,0 +1,16 @@
+[Unit]
+Description=Corosync Dbus and SNMP notifier
+After=openais.service
+After=corosync.service
+
+[Install]
+WantedBy=corosync.target
+
+[Service]
+Type=simple
+KillMode=process
+SysVStartPriority=22
+Environment=COROSYNC_NOTIFYD_OPTS=-d
+EnvironmentFile=-/etc/sysconfig/corosync-notifyd
+ExecStart=/usr/sbin/corosync-notifyd -f $COROSYNC_NOTIFYD_OPTS
+Restart=on-failure

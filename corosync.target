@@ -1,0 +1,5 @@
+[Unit]
+Description=Corosync Stack (bare or OpenAIS)
+
+[Install]
+WantedBy=multi-user.target

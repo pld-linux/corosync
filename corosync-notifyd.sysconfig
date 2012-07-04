@@ -1,12 +1,9 @@
 
-# Send SNMP traps on all events.
-SEND_SNMP_TRAPS=no
-
-# SNMP Manager IP address (defaults to localhost).
-#SNMP_MANAGER=
-
-# Send DBUS signals on all events.
-SEND_DBUS_SIGNALS=yes
-
-# Log all events.
-LOG_ALL_EVENTS=no
+# corosync-notifyd options
+# 
+# -l     : Log all events.
+# -s     : Send SNMP traps on all events.
+# -m     : SNMP Manager IP address (defaults to localhost).
+# -d     : Send DBUS signals on all events.
+#
+COROSYNC_NOTIFYD_OPTS="-d"

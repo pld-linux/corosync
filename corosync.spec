@@ -9,7 +9,7 @@ Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
 Version:	1.4.3
-Release:	2.1
+Release:	2.2
 License:	BSD
 Group:		Base
 Source0:	ftp://ftp:downloads@corosync.org/downloads/%{name}-%{version}/%{name}-%{version}.tar.gz
@@ -17,6 +17,9 @@ Source0:	ftp://ftp:downloads@corosync.org/downloads/%{name}-%{version}/%{name}-%
 Source1:	%{name}.init
 Source2:	%{name}-notifyd.init
 Source3:	%{name}-notifyd.sysconfig
+Source4:	%{name}.service
+Source5:	%{name}-notifyd.service
+Source6:	%{name}.target
 Patch0:		%{name}-makefile.patch
 URL:		http://www.corosync.org/
 BuildRequires:	autoconf >= 2.61
@@ -120,7 +123,7 @@ Dane SNMP MIB dla Corosync.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,/etc/sysconfig}
+install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,/etc/sysconfig,%{systemdunitdir}}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -131,11 +134,14 @@ sed -e 's/^/#/' $RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf.example \
 	>$RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf
 %{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf.example*
 
+%{?with_apidocs:install doc/api/man/man3/* $RPM_BUILD_ROOT%{_mandir}/man3}
+
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}-notifyd
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/%{name}-notifyd
-
-%{?with_apidocs:install doc/api/man/man3/* $RPM_BUILD_ROOT%{_mandir}/man3}
+install %{SOURCE4} $RPM_BUILD_ROOT%{systemdunitdir}/%{name}.service
+install %{SOURCE5} $RPM_BUILD_ROOT%{systemdunitdir}/%{name}-notifyd.service
+install %{SOURCE6} $RPM_BUILD_ROOT%{systemdunitdir}/%{name}.target
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -147,6 +153,7 @@ rm -rf $RPM_BUILD_ROOT
 %service %{name}-notifyd restart
 %systemd_post %{name}.service
 %systemd_post %{name}-notifyd.service
+%systemd_post %{name}.target
 
 %preun
 if [ "$1" = "0" ]; then
@@ -157,6 +164,7 @@ if [ "$1" = "0" ]; then
 fi
 %systemd_preun %{name}.service
 %systemd_preun %{name}-notifyd.service
+%systemd_preun %{name}.target
 
 %postun
 %systemd_reload
@@ -169,6 +177,9 @@ fi
 %doc AUTHORS ChangeLog LICENSE README.devmap README.recovery SECURITY TODO conf/corosync.conf.example*
 %attr(754,root,root) /etc/rc.d/init.d/corosync
 %attr(754,root,root) /etc/rc.d/init.d/corosync-notifyd
+%{systemdunitdir}/%{name}.service
+%{systemdunitdir}/%{name}-notifyd.service
+%{systemdunitdir}/%{name}.target
 %verify(not md5 mtime size) %config(noreplace) /etc/sysconfig/%{name}-notifyd
 %dir %{_sysconfdir}/corosync
 %verify(not md5 mtime size) %config(noreplace) %{_sysconfdir}/corosync/corosync.conf
