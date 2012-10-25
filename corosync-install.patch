@@ -1,26 +1,14 @@
---- corosync-2.0.1.orig/configure.ac	2012-05-22 08:52:01.000000000 +0200
-+++ corosync-2.0.1/configure.ac	2012-07-01 11:05:47.160318795 +0200
-@@ -601,8 +601,8 @@
+diff -dur corosync-2.1.0.orig/configure.ac corosync-2.1.0/configure.ac
+--- corosync-2.1.0.orig/configure.ac	2012-10-10 10:17:50.000000000 +0200
++++ corosync-2.1.0/configure.ac	2012-10-25 08:59:49.000000000 +0200
+@@ -611,8 +611,8 @@
+ AC_SUBST([SONAME])
  
- AC_SUBST([OS_LDL])
  AM_CONDITIONAL(INSTALL_TESTAGENTS, test -n "${enable_testagents}")
- AM_CONDITIONAL(INSTALL_MIB, test "${enable_snmp}" = "1")
+ AM_CONDITIONAL(INSTALL_MIB, test "${do_snmp}" = "1")
 -AM_CONDITIONAL(INSTALL_DBUSCONF, test "${enable_dbus}" = "1")
 +AM_CONDITIONAL(INSTALL_DBUSCONF, test "${enable_dbus}" = "yes")
  AM_CONDITIONAL(AUGTOOL, test -n "${AUGTOOL}")
  AC_SUBST([NSS_LDFLAGS])
  
---- corosync-2.0.1.orig/init/Makefile.am	2012-05-22 08:52:01.000000000 +0200
-+++ corosync-2.0.1/init/Makefile.am	2012-07-01 11:11:22.512547818 +0200
-@@ -39,10 +39,8 @@
- if INSTALL_SYSTEMD
- systemdconfdir	   = $(SYSTEMDDIR)
- systemdconf_DATA   = corosync.service corosync-notifyd.service
--initscriptdir	   = $(INITWRAPPERSDIR)
--else
--initscriptdir	   = $(INITDDIR)
- endif
-+initscriptdir	   = $(INITDDIR)
- initscript_SCRIPTS  = corosync corosync-notifyd
- 
- %: %.in Makefile
+

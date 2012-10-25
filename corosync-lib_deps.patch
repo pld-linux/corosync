@@ -1,24 +1,13 @@
-diff -dur -x '*~' corosync-2.0.1.orig/exec/Makefile.am corosync-2.0.1/exec/Makefile.am
---- corosync-2.0.1.orig/exec/Makefile.am	2012-07-01 10:53:36.000000000 +0200
-+++ corosync-2.0.1/exec/Makefile.am	2012-07-01 10:55:31.786194954 +0200
-@@ -86,7 +86,7 @@
- libtotem_pg.so.$(SONAME): $(TOTEM_OBJS)
- 	$(CC) -shared -o $@ \
- 		-Wl,-soname=libtotem_pg.so.$(SOMAJOR) \
--		$(LDFLAGS) $^ $(nss_LIBS) $(rdmacm_LIBS) $(ibverbs_LIBS) -lpthread $(LIBS)
-+		$(LDFLAGS) $^ $(nss_LIBS) $(rdmacm_LIBS) $(ibverbs_LIBS) $(LIBQB_LIBS) -lpthread $(LIBS)
- 	ln -sf libtotem_pg.so.$(SONAME) libtotem_pg.so
- 	ln -sf libtotem_pg.so.$(SONAME) libtotem_pg.so.$(SOMAJOR)
+diff -dur corosync-2.1.0.orig/exec/Makefile.am corosync-2.1.0/exec/Makefile.am
+--- corosync-2.1.0.orig/exec/Makefile.am	2012-10-10 10:17:50.000000000 +0200
++++ corosync-2.1.0/exec/Makefile.am	2012-10-25 08:49:37.000000000 +0200
+@@ -50,7 +50,7 @@
+ libtotem_pg_la_SOURCES	= $(TOTEM_SRC)
+ libtotem_pg_la_CFLAGS	= $(nss_CFLAGS) $(rdmacm_CFLAGS) $(ibverbs_CFLAGS)
+ libtotem_pg_la_LDFLAGS	= -version-number $(subst .,:,$(SONAME))
+-libtotem_pg_la_LIBADD	= -lpthread $(nss_LIBS) $(rdmacm_LIBS) $(ibverbs_LIBS)
++libtotem_pg_la_LIBADD	= -lpthread $(LIBQB_LIBS) $(nss_LIBS) $(rdmacm_LIBS) $(ibverbs_LIBS)
  
-diff -dur -x '*~' corosync-2.0.1.orig/lib/Makefile.am corosync-2.0.1/lib/Makefile.am
---- corosync-2.0.1.orig/lib/Makefile.am	2012-05-22 08:51:00.000000000 +0200
-+++ corosync-2.0.1/lib/Makefile.am	2012-07-01 10:56:17.943172941 +0200
-@@ -55,7 +55,7 @@
- libquorum_a_SOURCES	= quorum.c
- libvotequorum_a_SOURCES	= votequorum.c
- libcmap_a_SOURCES	= cmap.c
--SAM_LINKER_ADD		= -L. -lquorum -lcmap
-+SAM_LINKER_ADD		= -L. -lquorum -lcmap $(LIBQB_LIBS)
- libsam_a_SOURCES	= sam.c
+ sbin_PROGRAMS		= corosync
  
- noinst_HEADERS		= util.h \
+Only in corosync-2.1.0/exec: Makefile.am~

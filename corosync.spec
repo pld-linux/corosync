@@ -1,40 +1,38 @@
 #
-# TODO:
-#	- wait for openais compatible with corosync 2.0 before setting full Release
-#
 # Conditional build:
-%bcond_with	apidocs		# build apidocs (man3 pages are provided anyway)
+%bcond_without	apidocs		# build apidocs (some man3 pages are provided anyway)
 %bcond_without	dbus		# DBus events
 %bcond_without	rdma		# RDMA support
 %bcond_without	snmp		# SNMP protocol support
-%bcond_with testagents
-%bcond_with watchdog
-%bcond_with monitoring
-%bcond_with xmlconf
+%bcond_without	testagents
+%bcond_without	watchdog
+%bcond_without	monitoring
+%bcond_without	xmlconf
 #
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
-Version:	2.0.1
+Version:	2.1.0
 Release:	0.1
 License:	BSD
 Group:		Base
-Source0:	ftp://ftp:downloads@corosync.org/downloads/%{name}-%{version}/corosync-%{version}.tar.gz
-# Source0-md5:	9e23f3f5594676455ff39ff363658155
+Source0:	https://github.com/downloads/corosync/corosync/corosync-2.1.0.tar.gz
+# Source0-md5:	dc5152e6dfdb4638ab544e587884483a
 Source1:	%{name}.init
 Source2:	%{name}-notifyd.init
 Source3:	%{name}-notifyd.sysconfig
-Patch0:		%{name}-makefile.patch
-Patch1:		%{name}-lib_deps.patch
-Patch2:		%{name}-install.patch
+Patch0:		%{name}-lib_deps.patch
+Patch1:		%{name}-install.patch
 URL:		http://www.corosync.org/
 BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake
 %{?with_dbus:BuildRequires:	dbus-devel}
 %{?with_apidocs:BuildRequires:	doxygen}
 BuildRequires:	libqb-devel
+%{?with_monitoring:BuildRequires:	libstatgrab-devel}
 %if %{with rdma}
 BuildRequires:	libibverbs-devel
+BuildRequires:	libtool
 BuildRequires:	librdmacm-devel
 %endif
 %{?with_xmlconf:BuildRequires:	libxslt}
@@ -119,9 +117,9 @@ This package contains corosync test agents.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 %build
+%{__libtoolize}
 %{__aclocal}
 %{__autoconf}
 %{__autoheader}
@@ -142,10 +140,6 @@ This package contains corosync test agents.
 
 %{?with_apidocs:%{__make} doxygen}
 
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}-notifyd
-install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/%{name}-notifyd
-
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,/etc/sysconfig}
@@ -159,7 +153,13 @@ sed -e 's/^/#/' $RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf.example \
 	>$RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf
 %{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf.example*
 
-%{?with_apidocs:install doc/api/man/man3/* $RPM_BUILD_ROOT%{_mandir}/man3}
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}-notifyd
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/%{name}-notifyd
+
+# init scripts, we provide our own
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/corosync
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/corosync-notifyd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -206,7 +206,6 @@ fi
 %attr(755,root,root) %{_sbindir}/corosync-cfgtool
 %attr(755,root,root) %{_sbindir}/corosync-cmapctl
 %attr(755,root,root) %{_sbindir}/corosync-cpgtool
-%attr(755,root,root) %{_sbindir}/corosync-fplay
 %attr(755,root,root) %{_sbindir}/corosync-keygen
 %attr(755,root,root) %{_sbindir}/corosync-notifyd
 %attr(755,root,root) %{_sbindir}/corosync-quorumtool
@@ -216,7 +215,6 @@ fi
 %{_mandir}/man8/corosync-cmapctl.8*
 %{_mandir}/man8/corosync-cfgtool.8*
 %{_mandir}/man8/corosync-cpgtool.8*
-%{_mandir}/man8/corosync-fplay.8*
 %{_mandir}/man8/corosync-keygen.8*
 %{_mandir}/man8/corosync-notifyd.8*
 %{_mandir}/man8/corosync-quorumtool.8*
@@ -248,11 +246,12 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libquorum.so.5
 %attr(755,root,root) %{_libdir}/libtotem_pg.so.5.*.*
 %attr(755,root,root) %ghost %{_libdir}/libtotem_pg.so.5
-%attr(755,root,root) %{_libdir}/libvotequorum.so.5.*.*
-%attr(755,root,root) %ghost %{_libdir}/libvotequorum.so.5
+%attr(755,root,root) %{_libdir}/libvotequorum.so.6.*.*
+%attr(755,root,root) %ghost %{_libdir}/libvotequorum.so.6
 
 %files devel
 %defattr(644,root,root,755)
+%doc doc/api/html/*
 %attr(755,root,root) %{_libdir}/libcfg.so
 %attr(755,root,root) %{_libdir}/libcmap.so
 %attr(755,root,root) %{_libdir}/libcorosync_common.so
