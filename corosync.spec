@@ -251,7 +251,7 @@ fi
 
 %files devel
 %defattr(644,root,root,755)
-%doc doc/api/html/*
+%{?with_apidocs:%doc doc/api/html/*}
 %attr(755,root,root) %{_libdir}/libcfg.so
 %attr(755,root,root) %{_libdir}/libcmap.so
 %attr(755,root,root) %{_libdir}/libcorosync_common.so
