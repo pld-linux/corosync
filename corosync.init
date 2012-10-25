@@ -27,10 +27,6 @@ start() {
 		msg_already_running "Corosync Cluster Engine"
 		return
 	fi
-	if [ -f /var/lock/subsys/openais ]; then
-		msg_already_running "Corosync Cluster Engine (as openais)"
-		return
-	fi
 	if grep -q nocluster /proc/cmdline ; then
 		show "Disabled on boot"
 		RETVAL=1

@@ -31,10 +31,6 @@ start() {
 		msg_already_running "Corosync Notifier"
 		return
 	fi
-	if [ -f /var/lock/subsys/openais ]; then
-		msg_already_running "Corosync Notifier (as openais)"
-		return
-	fi
 	if grep -q nocluster /proc/cmdline ; then
 		show "Disabled on boot"
 		RETVAL=1
