@@ -157,10 +157,6 @@ install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}-notifyd
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/%{name}-notifyd
 
-# init scripts, we provide our own
-%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/corosync
-%{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/corosync-notifyd
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -223,6 +219,8 @@ fi
 %config(noreplace) %{_sysconfdir}/corosync/corosync.xml.example
 %dir %{_datadir}/corosync
 %dir %{_datadir}/corosync/xml2conf.xsl
+%attr(755,root,root) %{_datadir}/%{name}/corosync
+%attr(755,root,root) %{_datadir}/%{name}/corosync-notifyd
 %{_mandir}/man8/corosync-xmlproc.8*
 %{_mandir}/man5/corosync.xml.5*
 %endif
