@@ -214,13 +214,13 @@ fi
 %{_mandir}/man8/corosync-keygen.8*
 %{_mandir}/man8/corosync-notifyd.8*
 %{_mandir}/man8/corosync-quorumtool.8*
+%dir %{_datadir}/corosync
+%attr(755,root,root) %{_datadir}/%{name}/corosync
+%attr(755,root,root) %{_datadir}/%{name}/corosync-notifyd
 %if %{with xmlconf}
 %attr(755,root,root) %{_bindir}/corosync-xmlproc
 %config(noreplace) %{_sysconfdir}/corosync/corosync.xml.example
-%dir %{_datadir}/corosync
 %dir %{_datadir}/corosync/xml2conf.xsl
-%attr(755,root,root) %{_datadir}/%{name}/corosync
-%attr(755,root,root) %{_datadir}/%{name}/corosync-notifyd
 %{_mandir}/man8/corosync-xmlproc.8*
 %{_mandir}/man5/corosync.xml.5*
 %endif
