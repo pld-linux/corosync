@@ -227,6 +227,7 @@ fi
 %if %{with dbus}
 /etc/dbus-1/system.d/corosync-signals.conf
 %endif
+/var/lib/corosync
 
 %files libs
 %defattr(644,root,root,755)
