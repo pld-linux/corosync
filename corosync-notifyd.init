@@ -19,9 +19,7 @@
 # Source function library
 . /etc/rc.d/init.d/functions
 
-SEND_SNMP_TRAPS=no
-SEND_DBUS_SIGNALS=yes
-LOG_ALL_EVENTS=no
+OPTIONS="-d"
 
 [ -f /etc/sysconfig/corosync-notifyd ] && . /etc/sysconfig/corosync-notifyd
 
@@ -37,21 +35,8 @@ start() {
 		return
 	fi
 
-	local options=""
-	if is_yes "$SEND_SNMP_TRAPS" ; then
-		options="$options -s"
-	fi
-	if [ -n "$SNMP_MANAGER" ] ; then
-		options="$options -m $SNMP_MANAGER"
-	fi
-	if is_yes "$SEND_DBUS_SIGNALS" ; then
-		options="$options -d"
-	fi
-	if is_yes "$LOG_ALL_EVENTS" ; then
-		options="$options -l"
-	fi
 	msg_starting "Corosync Notifier"
-	daemon /usr/sbin/corosync-notifyd "$options"
+	daemon /usr/sbin/corosync-notifyd "$OPTIONS"
 	RETVAL=$?
 	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/corosync-notifyd
 }
