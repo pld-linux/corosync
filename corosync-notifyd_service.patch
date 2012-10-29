@@ -1,0 +1,13 @@
+diff --git a/init/corosync-notifyd.service.in b/init/corosync-notifyd.service.in
+index 172653c..3eb3ca5 100644
+--- a/init/corosync-notifyd.service.in
++++ b/init/corosync-notifyd.service.in
+@@ -4,7 +4,7 @@ Wants=corosync.service
+ After=corosync.service
+ 
+ [Service]
+-EnvironmentFile=@SYSCONFIGDIR@/corosync-notifyd
++EnvironmentFile=/etc/sysconfig/corosync-notifyd
+ ExecStart=@SBINDIR@/corosync-notifyd -f $OPTIONS
+ Type=simple
+ 
