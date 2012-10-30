@@ -1,3 +1,4 @@
 
-# log and signal over DBus all events
+# Options for the corosync-notifyd daemon
+# see `man corosync-notifyd` for details
 OPTIONS=-l -d
