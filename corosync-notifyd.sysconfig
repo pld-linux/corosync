@@ -1,4 +1,4 @@
 
 # Options for the corosync-notifyd daemon
 # see `man corosync-notifyd` for details
-OPTIONS=-l -d
+OPTIONS="-l -d"
