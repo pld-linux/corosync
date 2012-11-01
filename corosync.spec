@@ -216,6 +216,15 @@ fi
 %{_mandir}/man8/corosync-keygen.8*
 %{_mandir}/man8/corosync-notifyd.8*
 %{_mandir}/man8/corosync-quorumtool.8*
+%{_mandir}/man5/votequorum.5*
+# should be man7...
+%{_mandir}/man8/cmap_keys.8*
+%{_mandir}/man8/cmap_overview.8*
+%{_mandir}/man8/corosync_overview.8*
+%{_mandir}/man8/cpg_overview.8*
+%{_mandir}/man8/sam_overview.8*
+%{_mandir}/man8/votequorum_overview.8*
+%{_mandir}/man8/quorum_overview.8*
 %dir %{_datadir}/corosync
 %attr(755,root,root) %{_datadir}/%{name}/corosync
 %attr(755,root,root) %{_datadir}/%{name}/corosync-notifyd
@@ -276,15 +285,7 @@ fi
 %{_mandir}/man3/quorum_*.3*
 %{_mandir}/man3/sam_*.3*
 %{_mandir}/man3/votequorum_*.3*
-%{_mandir}/man5/votequorum.5*
-# should be man7...
-%{_mandir}/man8/cmap_keys.8*
-%{_mandir}/man8/cmap_overview.8*
-%{_mandir}/man8/corosync_overview.8*
-%{_mandir}/man8/cpg_overview.8*
-%{_mandir}/man8/sam_overview.8*
-%{_mandir}/man8/votequorum_overview.8*
-%{_mandir}/man8/quorum_overview.8*
+
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libcfg.a
