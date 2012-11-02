@@ -16,7 +16,7 @@ Version:	2.1.0
 Release:	4
 License:	BSD
 Group:		Base
-Source0:	https://github.com/downloads/corosync/corosync/corosync-2.1.0.tar.gz
+Source0:	https://github.com/downloads/corosync/corosync/%{name}-%{version}.tar.gz
 # Source0-md5:	dc5152e6dfdb4638ab544e587884483a
 Source1:	%{name}.init
 Source2:	%{name}-notifyd.init
@@ -33,13 +33,17 @@ BuildRequires:	libqb-devel
 %{?with_monitoring:BuildRequires:	libstatgrab-devel}
 %if %{with rdma}
 BuildRequires:	libibverbs-devel
-BuildRequires:	libtool
 BuildRequires:	librdmacm-devel
+BuildRequires:	libtool
 %endif
 %{?with_xmlconf:BuildRequires:	libxslt}
 %{?with_snmp:BuildRequires:	net-snmp-devel}
 BuildRequires:	nss-devel
 BuildRequires:	pkgconfig
+BuildRequires:	rpmbuild(macros)
+Requires:	rc-scripts
+Requires:	systemd-units >= 38
+Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
