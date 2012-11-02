@@ -169,10 +169,10 @@ rm -rf $RPM_BUILD_ROOT
 %post
 /sbin/chkconfig --add %{name}
 /sbin/chkconfig --add %{name}-notifyd
-%service %{name} restart
 %service %{name}-notifyd restart
-%systemd_post %{name}.service
 %systemd_post %{name}-notifyd.service
+export NORESTART=1
+%systemd_post %{name}.service
 
 %preun
 if [ "$1" = "0" ]; then
