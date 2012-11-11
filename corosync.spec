@@ -40,7 +40,7 @@ BuildRequires:	libtool
 %{?with_snmp:BuildRequires:	net-snmp-devel}
 BuildRequires:	nss-devel
 BuildRequires:	pkgconfig
-BuildRequires:	rpmbuild(macros)
+BuildRequires:	rpmbuild(macros) >= 1.644
 Requires:	rc-scripts
 Requires:	systemd-units >= 38
 Requires(post,preun):	/sbin/chkconfig
