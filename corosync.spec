@@ -12,18 +12,16 @@
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
-Version:	2.1.0
-Release:	6
+Version:	2.1.1
+Release:	1
 License:	BSD
 Group:		Base
-Source0:	https://github.com/downloads/corosync/corosync/%{name}-%{version}.tar.gz
-# Source0-md5:	dc5152e6dfdb4638ab544e587884483a
+Source0:	http://corosync.org/download/%{name}-%{version}.tar.gz
+# Source0-md5:	2291b376c16051373ce160d34c86c634
 Source1:	%{name}.init
 Source2:	%{name}-notifyd.init
 Source3:	%{name}-notifyd.sysconfig
-Patch0:		%{name}-lib_deps.patch
-Patch1:		%{name}-install.patch
-Patch2:		%{name}-notifyd_service.patch
+Patch0:		%{name}-notifyd_service.patch
 URL:		http://www.corosync.org/
 BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake
@@ -121,8 +119,6 @@ This package contains corosync test agents.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 %build
 %{__libtoolize}
