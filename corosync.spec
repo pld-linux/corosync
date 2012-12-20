@@ -13,7 +13,7 @@ Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
 Version:	2.2.0
-Release:	1
+Release:	2
 License:	BSD
 Group:		Base
 Source0:	http://corosync.org/download/%{name}-%{version}.tar.gz
@@ -145,6 +145,7 @@ This package contains corosync test agents.
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,/etc/sysconfig}
+install -d $RPM_BUILD_ROOT/var/log/cluster
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -239,6 +240,7 @@ fi
 /etc/dbus-1/system.d/corosync-signals.conf
 %endif
 /var/lib/corosync
+%dir /var/log/cluster
 
 %files libs
 %defattr(644,root,root,755)
