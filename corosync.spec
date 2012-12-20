@@ -240,7 +240,7 @@ fi
 /etc/dbus-1/system.d/corosync-signals.conf
 %endif
 /var/lib/corosync
-%dir /var/log/cluster
+%attr(700,root,root) %dir /var/log/cluster
 
 %files libs
 %defattr(644,root,root,755)
