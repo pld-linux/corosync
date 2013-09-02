@@ -4,10 +4,10 @@
 %bcond_without	dbus		# DBus events
 %bcond_without	rdma		# RDMA support
 %bcond_without	snmp		# SNMP protocol support
-%bcond_without	testagents
-%bcond_without	watchdog
-%bcond_without	monitoring
-%bcond_without	xmlconf
+%bcond_without	testagents	# test agents build
+%bcond_without	watchdog	# watchdog feature
+%bcond_without	monitoring	# monitoring feature
+%bcond_without	xmlconf		# XML configuration support
 #
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
@@ -95,6 +95,18 @@ This package contains the Corosync static libraries.
 %description static -l pl.UTF-8
 Ten pakiet zawiera statyczne biblioteki Corosync.
 
+%package testagents
+Summary:	The Corosync Cluster Engine test agents
+Summary(pl.UTF-8):	Testowi agenci silnika klastrowego Corosync
+Group:		Development/Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description testagents
+This package contains Corosync test agents.
+
+%description testagents -l pl.UTF-8
+Ten pakiet zawiera testowych agentów silnika Corosync.
+
 %package -n mibs-corosync
 Summary:	Corosync SNMP MIB data
 Summary(pl.UTF-8):	Dane SNMP MIB dla Corosync
@@ -107,14 +119,6 @@ Corosync SNMP MIB data.
 %description -n mibs-corosync -l pl.UTF-8
 Dane SNMP MIB dla Corosync.
 
-%package -n corosync-testagents
-Summary:	The Corosync Cluster Engine Test Agents
-Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
-
-%description -n corosync-testagents
-This package contains corosync test agents.
-
 %prep
 %setup -q
 
@@ -125,16 +129,17 @@ This package contains corosync test agents.
 %{__autoheader}
 %{__automake}
 %configure \
-	%{?with_testagents:--enable-testagents} \
-	%{?with_watchdog:--enable-watchdog} \
-	%{?with_monitoring:--enable-monitoring} \
-	%{?with_xmlconf:--enable-xmlconf} \
 	%{?with_dbus:--enable-dbus} \
+	%{?with_monitoring:--enable-monitoring} \
 	%{?with_rdma:--enable-rdma} \
+	--disable-silent-rules \
 	%{?with_snmp:--enable-snmp} \
 	--enable-systemd \
-	--with-systemddir=%{systemdunitdir} \
-	--with-initddir=/etc/rc.d/init.d
+	%{?with_testagents:--enable-testagents} \
+	%{?with_watchdog:--enable-watchdog} \
+	%{?with_xmlconf:--enable-xmlconf} \
+	--with-initddir=/etc/rc.d/init.d \
+	--with-systemddir=%{systemdunitdir}
 
 %{__make}
 
@@ -297,21 +302,21 @@ fi
 %{_libdir}/libtotem_pg.a
 %{_libdir}/libvotequorum.a
 
-%if %{with snmp}
-%files -n mibs-corosync
-%defattr(644,root,root,755)
-%{_datadir}/snmp/mibs/COROSYNC-MIB.txt
-%endif
-
 %if %{with testagents}
-%files -n corosync-testagents
+%files testagents
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/cpg_test_agent
+%attr(755,root,root) %{_bindir}/sam_test_agent
+%attr(755,root,root) %{_bindir}/votequorum_test_agent
 %dir %{_datadir}/corosync/tests
 %{_datadir}/corosync/tests/mem_leak_test.sh
 %{_datadir}/corosync/tests/net_breaker.sh
 %{_datadir}/corosync/tests/cmap-dispatch-deadlock.sh
 %{_datadir}/corosync/tests/shm_leak_audit.sh
-%attr(755,root,root) %{_bindir}/cpg_test_agent
-%attr(755,root,root) %{_bindir}/sam_test_agent
-%attr(755,root,root) %{_bindir}/votequorum_test_agent
+%endif
+
+%if %{with snmp}
+%files -n mibs-corosync
+%defattr(644,root,root,755)
+%{_datadir}/snmp/mibs/COROSYNC-MIB.txt
 %endif
