@@ -163,6 +163,9 @@ install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}-notifyd
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/%{name}-notifyd
 
+# obsoleted by pkg-config
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/lib*.la
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
