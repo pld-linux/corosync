@@ -1,12 +1,14 @@
 #
 # Conditional build:
 %bcond_without	apidocs		# build apidocs (some man3 pages are provided anyway)
+%bcond_without	augeas		# augeas lens support
 %bcond_without	dbus		# DBus events
 %bcond_without	rdma		# RDMA support
 %bcond_without	snmp		# SNMP protocol support
 %bcond_without	testagents	# test agents build
-%bcond_without	watchdog	# watchdog feature
-%bcond_without	monitoring	# monitoring feature
+%bcond_without	watchdog	# watchdog support
+%bcond_without	monitoring	# resource monitoring
+%bcond_with	qdevices	# Quorum devices support [NOP as of 2.3.1]
 %bcond_without	xmlconf		# XML configuration support
 #
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
@@ -26,13 +28,14 @@ BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake
 %{?with_dbus:BuildRequires:	dbus-devel}
 %{?with_apidocs:BuildRequires:	doxygen}
+BuildRequires:	groff
 BuildRequires:	libqb-devel
 %{?with_monitoring:BuildRequires:	libstatgrab-devel}
 %if %{with rdma}
 BuildRequires:	libibverbs-devel
 BuildRequires:	librdmacm-devel
-BuildRequires:	libtool
 %endif
+BuildRequires:	libtool >= 2:2.2.6
 %{?with_xmlconf:BuildRequires:	libxslt}
 %{?with_snmp:BuildRequires:	net-snmp-devel}
 BuildRequires:	nss-devel
@@ -129,8 +132,10 @@ Dane SNMP MIB dla Corosync.
 %{__autoheader}
 %{__automake}
 %configure \
+	%{?with_augeas:--enable-augeas} \
 	%{?with_dbus:--enable-dbus} \
 	%{?with_monitoring:--enable-monitoring} \
+	%{?with_qdevices:--enable-qdevices} \
 	%{?with_rdma:--enable-rdma} \
 	--disable-silent-rules \
 	%{?with_snmp:--enable-snmp} \
@@ -215,6 +220,7 @@ fi
 %attr(755,root,root) %{_sbindir}/corosync-notifyd
 %attr(755,root,root) %{_sbindir}/corosync-quorumtool
 %{_mandir}/man5/corosync.conf.5*
+%{_mandir}/man5/votequorum.5*
 %{_mandir}/man8/corosync.8*
 %{_mandir}/man8/corosync-blackbox.8*
 %{_mandir}/man8/corosync-cmapctl.8*
@@ -223,7 +229,6 @@ fi
 %{_mandir}/man8/corosync-keygen.8*
 %{_mandir}/man8/corosync-notifyd.8*
 %{_mandir}/man8/corosync-quorumtool.8*
-%{_mandir}/man5/votequorum.5*
 # should be man7...
 %{_mandir}/man8/cmap_keys.8*
 %{_mandir}/man8/cmap_overview.8*
@@ -241,6 +246,10 @@ fi
 %dir %{_datadir}/corosync/xml2conf.xsl
 %{_mandir}/man8/corosync-xmlproc.8*
 %{_mandir}/man5/corosync.xml.5*
+%endif
+%if %{with augeas}
+%{_datadir}/augeas/lenses/corosync.aug
+%{_datadir}/augeas/lenses/tests/test_corosync.aug
 %endif
 %if %{with dbus}
 /etc/dbus-1/system.d/corosync-signals.conf
