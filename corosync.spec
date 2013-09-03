@@ -8,12 +8,12 @@
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
-Version:	1.4.3
-Release:	2.2
+Version:	1.4.6
+Release:	1
 License:	BSD
 Group:		Base
-Source0:	ftp://ftp:downloads@corosync.org/downloads/%{name}-%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	9e9943a7d9eb90fabd52d12b215c699c
+Source0:	http://corosync.org/download/%{name}-%{version}.tar.gz
+# Source0-md5:	fddd4a5badea6c00ed97375c95c6f162
 Source1:	%{name}.init
 Source2:	%{name}-notifyd.init
 Source3:	%{name}-notifyd.sysconfig
@@ -21,11 +21,12 @@ Source4:	%{name}.service
 Source5:	%{name}-notifyd.service
 Source6:	%{name}.target
 Patch0:		%{name}-makefile.patch
-URL:		http://www.corosync.org/
+URL:		http://corosync.org/
 BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake
 %{?with_dbus:BuildRequires:	dbus-devel}
 %{?with_apidocs:BuildRequires:	doxygen}
+BuildRequires:	groff
 %if %{with rdma}
 BuildRequires:	libibverbs-devel
 BuildRequires:	librdmacm-devel
@@ -205,6 +206,16 @@ fi
 %{_mandir}/man8/corosync-objctl.8*
 %{_mandir}/man8/corosync-pload.8*
 %{_mandir}/man8/corosync-quorumtool.8*
+# should be man7...
+%{_mandir}/man8/confdb_keys.8*
+%{_mandir}/man8/confdb_overview.8*
+%{_mandir}/man8/coroipc_overview.8*
+%{_mandir}/man8/corosync_overview.8*
+%{_mandir}/man8/cpg_overview.8*
+%{_mandir}/man8/evs_overview.8*
+%{_mandir}/man8/logsys_overview.8*
+%{_mandir}/man8/sam_overview.8*
+%{_mandir}/man8/votequorum_overview.8*
 %dir %attr(700,root,root) /var/lib/corosync
 
 %files libs
@@ -268,15 +279,6 @@ fi
 %{_mandir}/man3/evs_*.3*
 %{_mandir}/man3/sam_*.3*
 %{_mandir}/man3/votequorum_*.3*
-# should be man7...
-%{_mandir}/man8/confdb_overview.8*
-%{_mandir}/man8/coroipc_overview.8*
-%{_mandir}/man8/corosync_overview.8*
-%{_mandir}/man8/cpg_overview.8*
-%{_mandir}/man8/evs_overview.8*
-%{_mandir}/man8/logsys_overview.8*
-%{_mandir}/man8/sam_overview.8*
-%{_mandir}/man8/votequorum_overview.8*
 
 %files static
 %defattr(644,root,root,755)
