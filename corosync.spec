@@ -36,11 +36,11 @@ BuildRequires:	libibverbs-devel
 BuildRequires:	librdmacm-devel
 %endif
 BuildRequires:	libtool >= 2:2.2.6
-%{?with_xmlconf:BuildRequires:	libxslt}
 %{?with_snmp:BuildRequires:	net-snmp-devel}
 BuildRequires:	nss-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.644
+%{?with_xmlconf:Requires:	libxslt-progs}
 Requires:	rc-scripts
 Requires:	systemd-units >= 38
 Requires(post,preun):	/sbin/chkconfig
