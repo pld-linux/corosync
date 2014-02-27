@@ -15,7 +15,7 @@ Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
 Version:	2.3.2
-Release:	1
+Release:	2
 License:	BSD
 Group:		Base
 Source0:	http://corosync.org/download/%{name}-%{version}.tar.gz
@@ -156,6 +156,7 @@ install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,/etc/sysconfig}
 install -d $RPM_BUILD_ROOT/var/log/cluster
 
 %{__make} install \
+	mibdir=%{_datadir}/mibs \
 	DESTDIR=$RPM_BUILD_ROOT
 
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}/corosync
@@ -330,5 +331,5 @@ fi
 %if %{with snmp}
 %files -n mibs-corosync
 %defattr(644,root,root,755)
-%{_datadir}/snmp/mibs/COROSYNC-MIB.txt
+%{_datadir}/mibs/COROSYNC-MIB.txt
 %endif
