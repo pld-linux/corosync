@@ -14,12 +14,12 @@
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
-Version:	2.3.2
-Release:	2
+Version:	2.3.3
+Release:	1
 License:	BSD
 Group:		Base
 Source0:	http://corosync.org/download/%{name}-%{version}.tar.gz
-# Source0-md5:	0471219664186d110273b8ce48b1d169
+# Source0-md5:	e68e97bff74fc56c86493dc7def5f1bc
 Source1:	%{name}.init
 Source2:	%{name}-notifyd.init
 Source3:	%{name}-notifyd.sysconfig
@@ -28,6 +28,7 @@ BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake
 %{?with_dbus:BuildRequires:	dbus-devel}
 %{?with_apidocs:BuildRequires:	doxygen}
+%{?with_apidocs:BuildRequires:	graphviz}
 BuildRequires:	groff
 BuildRequires:	libqb-devel
 %{?with_monitoring:BuildRequires:	libstatgrab-devel}
