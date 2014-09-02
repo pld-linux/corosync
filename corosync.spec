@@ -14,12 +14,12 @@
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
-Version:	2.3.3
+Version:	2.3.4
 Release:	1
 License:	BSD
 Group:		Base
 Source0:	http://corosync.org/download/%{name}-%{version}.tar.gz
-# Source0-md5:	e68e97bff74fc56c86493dc7def5f1bc
+# Source0-md5:	4b0f36a1dc014527e5b192265dbd7e70
 Source1:	%{name}.init
 Source2:	%{name}-notifyd.init
 Source3:	%{name}-notifyd.sysconfig
@@ -202,7 +202,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog LICENSE README.recovery SECURITY TODO conf/corosync.conf.example*
+%doc AUTHORS ChangeLog LICENSE README.recovery SECURITY conf/corosync.conf.example*
 %if %{with xmlconf}
 %doc conf/corosync.xml.example*
 %endif
@@ -275,8 +275,8 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libquorum.so.5
 %attr(755,root,root) %{_libdir}/libtotem_pg.so.5.*.*
 %attr(755,root,root) %ghost %{_libdir}/libtotem_pg.so.5
-%attr(755,root,root) %{_libdir}/libvotequorum.so.6.*.*
-%attr(755,root,root) %ghost %{_libdir}/libvotequorum.so.6
+%attr(755,root,root) %{_libdir}/libvotequorum.so.7.*.*
+%attr(755,root,root) %ghost %{_libdir}/libvotequorum.so.7
 
 %files devel
 %defattr(644,root,root,755)
