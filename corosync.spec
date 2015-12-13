@@ -14,18 +14,19 @@
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
-Version:	2.3.4
-Release:	3
+Version:	2.3.5
+Release:	1
 License:	BSD
 Group:		Base
-Source0:	http://corosync.org/download/%{name}-%{version}.tar.gz
-# Source0-md5:	4b0f36a1dc014527e5b192265dbd7e70
+#Source0Download: http://corosync.org/download/
+Source0:	http://build.clusterlabs.org/corosync/releases/%{name}-%{version}.tar.gz
+# Source0-md5:	8894f00d499e0755467b381e6346f9ff
 Source1:	%{name}.init
 Source2:	%{name}-notifyd.init
 Source3:	%{name}-notifyd.sysconfig
 URL:		http://www.corosync.org/
 BuildRequires:	autoconf >= 2.61
-BuildRequires:	automake
+BuildRequires:	automake >= 1:1.11
 %{?with_dbus:BuildRequires:	dbus-devel}
 %{?with_apidocs:BuildRequires:	doxygen}
 %{?with_apidocs:BuildRequires:	graphviz}
@@ -41,6 +42,8 @@ BuildRequires:	libtool >= 2:2.2.6
 BuildRequires:	nss-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.644
+# only for cpghum test program
+#BuildRequires:	zlib-devel
 %{?with_xmlconf:Requires:	libxslt-progs}
 Requires:	rc-scripts
 Requires:	systemd-units >= 38
@@ -208,6 +211,7 @@ fi
 %endif
 %attr(754,root,root) /etc/rc.d/init.d/corosync
 %attr(754,root,root) /etc/rc.d/init.d/corosync-notifyd
+%verify(not md5 mtime size) %config(noreplace) /etc/logrotate.d/%{name}
 %verify(not md5 mtime size) %config(noreplace) /etc/sysconfig/%{name}-notifyd
 %dir %{_sysconfdir}/corosync
 %{systemdunitdir}/corosync.service
