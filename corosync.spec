@@ -14,13 +14,13 @@
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
-Version:	2.4.1
+Version:	2.4.2
 Release:	1
 License:	BSD
 Group:		Base
 #Source0Download: http://corosync.org/download/
 Source0:	http://build.clusterlabs.org/corosync/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	211a18722c9e98c35c421f32e719adb4
+# Source0-md5:	547fa78704da53aa35912be58d31035f
 Source1:	%{name}.init
 Source2:	%{name}-notifyd.init
 Source3:	%{name}-notifyd.sysconfig
@@ -279,8 +279,8 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libquorum.so.5
 %attr(755,root,root) %{_libdir}/libtotem_pg.so.5.*.*
 %attr(755,root,root) %ghost %{_libdir}/libtotem_pg.so.5
-%attr(755,root,root) %{_libdir}/libvotequorum.so.7.*.*
-%attr(755,root,root) %ghost %{_libdir}/libvotequorum.so.7
+%attr(755,root,root) %{_libdir}/libvotequorum.so.8.*.*
+%attr(755,root,root) %ghost %{_libdir}/libvotequorum.so.8
 
 %files devel
 %defattr(644,root,root,755)
