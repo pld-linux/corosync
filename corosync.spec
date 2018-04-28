@@ -8,19 +8,21 @@
 %bcond_without	testagents	# test agents build
 %bcond_without	watchdog	# watchdog support
 %bcond_without	monitoring	# resource monitoring
-%bcond_with	qdevices	# Quorum devices support [NOP as of 2.3.1]
+%bcond_without	qdevices	# Quorum devices support
+%bcond_without	qnetd		# Quorum Net Daemon support
 %bcond_without	xmlconf		# XML configuration support
+%bcond_without	libcgroup	# libcgroup support
 #
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
-Version:	2.4.2
+Version:	2.4.4
 Release:	1
 License:	BSD
 Group:		Base
 #Source0Download: http://corosync.org/download/
 Source0:	http://build.clusterlabs.org/corosync/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	547fa78704da53aa35912be58d31035f
+# Source0-md5:	69db29ff4bc035936946be44fc8be5cd
 Source1:	%{name}.init
 Source2:	%{name}-notifyd.init
 Source3:	%{name}-notifyd.sysconfig
@@ -31,12 +33,13 @@ BuildRequires:	automake >= 1:1.11
 %{?with_apidocs:BuildRequires:	doxygen}
 %{?with_apidocs:BuildRequires:	graphviz}
 BuildRequires:	groff
+%{?with_libcgroup:BuildRequires:	libcgroup-devel}
 BuildRequires:	libqb-devel
-%{?with_monitoring:BuildRequires:	libstatgrab-devel}
 %if %{with rdma}
 BuildRequires:	libibverbs-devel
 BuildRequires:	librdmacm-devel
 %endif
+%{?with_monitoring:BuildRequires:	libstatgrab-devel}
 BuildRequires:	libtool >= 2:2.2.6
 %{?with_snmp:BuildRequires:	net-snmp-devel}
 BuildRequires:	nss-devel
@@ -138,8 +141,10 @@ Dane SNMP MIB dla Corosync.
 %configure \
 	%{?with_augeas:--enable-augeas} \
 	%{?with_dbus:--enable-dbus} \
+	%{?with_libcgroup:--enable-libcgroup} \
 	%{?with_monitoring:--enable-monitoring} \
 	%{?with_qdevices:--enable-qdevices} \
+	%{?with_qnetd:--enable-qnetd} \
 	%{?with_rdma:--enable-rdma} \
 	--disable-silent-rules \
 	%{?with_snmp:--enable-snmp} \
@@ -172,6 +177,18 @@ sed -e 's/^/#/' $RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf.example \
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}-notifyd
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/%{name}-notifyd
+
+%if %{with qdevices} || %{with qnetd}
+install -d $RPM_BUILD_ROOT%{systemdtmpfilesdir}
+cat >$RPM_BUILD_ROOT%{systemdtmpfilesdir}/corosync.conf <<EOF
+%if %{with qdevices}
+d /var/run/corosync-qdevice 0770 root root -
+%endif
+%if %{with qnetd}
+d /var/run/corosync-qnetd 0770 root root -
+%endif
+EOF
+%endif
 
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/lib*.la
@@ -214,8 +231,13 @@ fi
 %verify(not md5 mtime size) %config(noreplace) /etc/logrotate.d/%{name}
 %verify(not md5 mtime size) %config(noreplace) /etc/sysconfig/%{name}-notifyd
 %dir %{_sysconfdir}/corosync
+%dir %{_sysconfdir}/corosync/service.d
+%dir %{_sysconfdir}/corosync/uidgid.d
 %{systemdunitdir}/corosync.service
 %{systemdunitdir}/corosync-notifyd.service
+%if %{with qdevices} || %{with qnetd}
+%{systemdtmpfilesdir}/corosync.conf
+%endif
 %verify(not md5 mtime size) %config(noreplace) %{_sysconfdir}/corosync/corosync.conf
 %attr(755,root,root) %{_bindir}/corosync-blackbox
 %attr(755,root,root) %{_sbindir}/corosync
@@ -260,8 +282,33 @@ fi
 %if %{with dbus}
 /etc/dbus-1/system.d/corosync-signals.conf
 %endif
-/var/lib/corosync
+%dir /var/lib/corosync
 %attr(700,root,root) %dir /var/log/cluster
+%if %{with qdevices}
+%attr(755,root,root) %{_sbindir}/corosync-qdevice
+%attr(755,root,root) %{_sbindir}/corosync-qdevice-net-certutil
+%attr(755,root,root) %{_sbindir}/corosync-qdevice-tool
+%{_datadir}/corosync/corosync-qdevice
+%{systemdunitdir}/corosync-qdevice.service
+%dir %{_sysconfdir}/corosync/qdevice
+%attr(770,root,root) %dir %{_sysconfdir}/corosync/qdevice/net
+%attr(770,root,root) %dir /var/run/corosync-qdevice
+%{_mandir}/man8/corosync-qdevice.8*
+%{_mandir}/man8/corosync-qdevice-net-certutil.8*
+%{_mandir}/man8/corosync-qdevice-tool.8*
+%endif
+%if %{with qnetd}
+%attr(755,root,root) %{_bindir}/corosync-qnetd
+%attr(755,root,root) %{_bindir}/corosync-qnetd-certutil
+%attr(755,root,root) %{_bindir}/corosync-qnetd-tool
+%{_datadir}/corosync/corosync-qnetd
+%{systemdunitdir}/corosync-qnetd.service
+%attr(770,root,root) %dir %{_sysconfdir}/corosync/qnetd
+%attr(770,root,root) %dir /var/run/corosync-qnetd
+%{_mandir}/man8/corosync-qnetd.8*
+%{_mandir}/man8/corosync-qnetd-certutil.8*
+%{_mandir}/man8/corosync-qnetd-tool.8*
+%endif
 
 %files libs
 %defattr(644,root,root,755)
