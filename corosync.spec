@@ -16,17 +16,17 @@
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
-Version:	2.4.4
-Release:	2
+Version:	2.4.5
+Release:	1
 License:	BSD
 Group:		Base
 #Source0Download: http://corosync.org/download/
-Source0:	http://build.clusterlabs.org/corosync/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	69db29ff4bc035936946be44fc8be5cd
+Source0:	https://build.clusterlabs.org/corosync/releases/%{name}-%{version}.tar.gz
+# Source0-md5:	e36a056b893c313c4ec1fe0d7e6cdebd
 Source1:	%{name}.init
 Source2:	%{name}-notifyd.init
 Source3:	%{name}-notifyd.sysconfig
-URL:		http://www.corosync.org/
+URL:		https://www.corosync.org/
 BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake >= 1:1.11
 %{?with_dbus:BuildRequires:	dbus-devel}
@@ -39,7 +39,7 @@ BuildRequires:	libqb-devel
 BuildRequires:	libibverbs-devel
 BuildRequires:	librdmacm-devel
 %endif
-%{?with_monitoring:BuildRequires:	libstatgrab-devel}
+%{?with_monitoring:BuildRequires:	libstatgrab-devel >= 0.90}
 BuildRequires:	libtool >= 2:2.2.6
 %{?with_snmp:BuildRequires:	net-snmp-devel}
 BuildRequires:	nss-devel
