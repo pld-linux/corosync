@@ -17,7 +17,7 @@ Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
 Version:	2.4.5
-Release:	1
+Release:	2
 License:	BSD
 Group:		Base
 #Source0Download: http://corosync.org/download/
@@ -139,6 +139,7 @@ Dane SNMP MIB dla Corosync.
 %{__autoheader}
 %{__automake}
 %configure \
+	BASHPATH=/bin/bash \
 	%{?with_augeas:--enable-augeas} \
 	%{?with_dbus:--enable-dbus} \
 	%{?with_libcgroup:--enable-libcgroup} \
