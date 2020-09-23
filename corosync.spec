@@ -12,13 +12,13 @@
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
-Version:	3.0.3
+Version:	3.0.4
 Release:	1
 License:	BSD
 Group:		Base
 #Source0Download: http://corosync.org/download/
 Source0:	https://build.clusterlabs.org/corosync/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	4ba2f56101cea4f5d67113ca42ebf686
+# Source0-md5:	882db28e78423219ba89f8aec7f9b547
 Source1:	%{name}.init
 Source2:	%{name}-notifyd.init
 Source3:	%{name}-notifyd.sysconfig
@@ -208,6 +208,7 @@ fi
 %attr(755,root,root) %{_sbindir}/corosync-quorumtool
 %{_mandir}/man5/corosync.conf.5*
 %{_mandir}/man5/votequorum.5*
+%{_mandir}/man7/cmap_keys.7*
 %{_mandir}/man7/corosync_overview.7*
 %{_mandir}/man8/corosync.8*
 %{_mandir}/man8/corosync-blackbox.8*
@@ -217,8 +218,6 @@ fi
 %{_mandir}/man8/corosync-keygen.8*
 %{_mandir}/man8/corosync-notifyd.8*
 %{_mandir}/man8/corosync-quorumtool.8*
-# should be man7...
-%{_mandir}/man8/cmap_keys.8*
 %dir %{_datadir}/corosync
 %if %{with xmlconf}
 %attr(755,root,root) %{_bindir}/corosync-xmlproc
