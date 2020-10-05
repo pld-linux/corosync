@@ -17,7 +17,7 @@ Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
 Version:	2.4.5
-Release:	3
+Release:	4
 License:	BSD
 Group:		Base
 #Source0Download: http://corosync.org/download/
