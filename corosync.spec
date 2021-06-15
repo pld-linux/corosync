@@ -275,7 +275,7 @@ fi
 %if %{with xmlconf}
 %attr(755,root,root) %{_bindir}/corosync-xmlproc
 %config(noreplace) %{_sysconfdir}/corosync/corosync.xml.example
-%dir %{_datadir}/corosync/xml2conf.xsl
+%{_datadir}/corosync/xml2conf.xsl
 %{_mandir}/man8/corosync-xmlproc.8*
 %{_mandir}/man5/corosync.xml.5*
 %endif
