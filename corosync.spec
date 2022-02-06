@@ -3,7 +3,9 @@
 %bcond_without	apidocs		# build apidocs (some man3 pages are provided anyway)
 %bcond_without	augeas		# augeas lens support
 %bcond_without	dbus		# DBus events
+%bcond_without	nozzle		# nozzle support
 %bcond_without	snmp		# SNMP protocol support
+%bcond_without	vqsim		# quorum simulator support
 %bcond_without	watchdog	# watchdog support
 %bcond_without	monitoring	# resource monitoring
 %bcond_without	xmlconf		# XML configuration support
@@ -12,13 +14,13 @@
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
-Version:	3.0.4
+Version:	3.1.6
 Release:	1
 License:	BSD
 Group:		Base
 #Source0Download: http://corosync.org/download/
 Source0:	https://build.clusterlabs.org/corosync/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	882db28e78423219ba89f8aec7f9b547
+# Source0-md5:	9bb4ef724b468d51ac9d6894cf34333b
 Source1:	%{name}.init
 Source2:	%{name}-notifyd.init
 Source3:	%{name}-notifyd.sysconfig
@@ -29,13 +31,16 @@ BuildRequires:	automake >= 1:1.11
 %{?with_apidocs:BuildRequires:	doxygen}
 %{?with_apidocs:BuildRequires:	graphviz}
 BuildRequires:	groff
+%{?with_nozzle:BuildRequires:	kronosnet-devel}
 BuildRequires:	libqb-devel
 %{?with_monitoring:BuildRequires:	libstatgrab-devel >= 0.90}
 BuildRequires:	libtool >= 2:2.2.6
 %{?with_snmp:BuildRequires:	net-snmp-devel}
 BuildRequires:	nss-devel
 BuildRequires:	pkgconfig
+%{?with_vqsim:BuildRequires:	readline-devel}
 BuildRequires:	rpmbuild(macros) >= 1.644
+BuildRequires:	systemd-devel >= 1:209
 # only for cpghum test program
 #BuildRequires:	zlib-devel
 %{?with_xmlconf:Requires:	libxslt-progs}
@@ -124,9 +129,11 @@ Dane SNMP MIB dla Corosync.
 	%{?with_augeas:--enable-augeas} \
 	%{?with_dbus:--enable-dbus} \
 	%{?with_monitoring:--enable-monitoring} \
+	%{?with_nozzle:--enable-nozzle} \
 	--disable-silent-rules \
 	%{?with_snmp:--enable-snmp} \
 	--enable-systemd \
+	%{?with_vqsim:--enable-vqsim} \
 	%{?with_watchdog:--enable-watchdog} \
 	%{?with_xmlconf:--enable-xmlconf} \
 	--with-initddir=/etc/rc.d/init.d \
