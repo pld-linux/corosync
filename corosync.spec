@@ -39,6 +39,7 @@ BuildRequires:	libtool >= 2:2.2.6
 BuildRequires:	nss-devel
 BuildRequires:	pkgconfig
 %{?with_vqsim:BuildRequires:	readline-devel}
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.644
 BuildRequires:	systemd-devel >= 1:209
 # only for cpghum test program
@@ -101,6 +102,18 @@ This package contains the Corosync static libraries.
 
 %description static -l pl.UTF-8
 Ten pakiet zawiera statyczne biblioteki Corosync.
+
+%package apidocs
+Summary:	API documentation for Corosync library
+Summary(pl.UTF-8):	Dokumentacja API biblioteki Corosync
+Group:		Documentation
+BuildArch:	noarch
+
+%description apidocs
+API documentation for Corosync library.
+
+%description apidocs -l pl.UTF-8
+Dokumentacja API biblioteki Corosync.
 
 %package -n mibs-corosync
 Summary:	Corosync SNMP MIB data
@@ -265,7 +278,6 @@ fi
 
 %files devel
 %defattr(644,root,root,755)
-%{?with_apidocs:%doc doc/api/html/*}
 %attr(755,root,root) %{_libdir}/libcfg.so
 %attr(755,root,root) %{_libdir}/libcmap.so
 %attr(755,root,root) %{_libdir}/libcorosync_common.so
@@ -298,6 +310,12 @@ fi
 %{_libdir}/libsam.a
 %{_libdir}/libquorum.a
 %{_libdir}/libvotequorum.a
+%endif
+
+%if %{with apidocs}
+%files apidocs
+%defattr(644,root,root,755)
+%doc doc/api/html/*.{css,html,js,png}
 %endif
 
 %if %{with snmp}
