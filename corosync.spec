@@ -14,13 +14,13 @@
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
-Version:	3.1.6
+Version:	3.1.7
 Release:	1
 License:	BSD
 Group:		Base
 #Source0Download: http://corosync.org/download/
 Source0:	https://build.clusterlabs.org/corosync/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	9bb4ef724b468d51ac9d6894cf34333b
+# Source0-md5:	83652b5ed1feecc80eac2ac9c3a2771e
 Source1:	%{name}.init
 Source2:	%{name}-notifyd.init
 Source3:	%{name}-notifyd.sysconfig
@@ -154,7 +154,7 @@ install -d $RPM_BUILD_ROOT/var/log/cluster
 
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}/corosync
 
-sed -e 's/^/#/' $RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf.example \
+%{__sed} -e 's/^/#/' $RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf.example \
 	>$RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf
 %{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/corosync/corosync.conf.example*
 
@@ -226,6 +226,10 @@ fi
 %{_mandir}/man8/corosync-notifyd.8*
 %{_mandir}/man8/corosync-quorumtool.8*
 %dir %{_datadir}/corosync
+%if %{with vqsim}
+%attr(755,root,root) %{_bindir}/corosync-vqsim
+%{_mandir}/man8/corosync-vqsim.8*
+%endif
 %if %{with xmlconf}
 %attr(755,root,root) %{_bindir}/corosync-xmlproc
 %{_datadir}/corosync/xml2conf.xsl
