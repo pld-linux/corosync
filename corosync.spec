@@ -36,8 +36,8 @@ BuildRequires:	groff
 %{?with_libcgroup:BuildRequires:	libcgroup-devel}
 BuildRequires:	libqb-devel
 %if %{with rdma}
-BuildRequires:	libibverbs-devel
-BuildRequires:	librdmacm-devel
+BuildRequires:	libibverbs-devel >= 20
+BuildRequires:	librdmacm-devel >= 20
 %endif
 %{?with_monitoring:BuildRequires:	libstatgrab-devel >= 0.90}
 BuildRequires:	libtool >= 2:2.2.6
