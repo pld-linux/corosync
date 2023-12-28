@@ -12,6 +12,7 @@
 %bcond_without	qnetd		# Quorum Net Daemon support
 %bcond_without	xmlconf		# XML configuration support
 %bcond_without	libcgroup	# libcgroup support
+%bcond_without	static_libs	# static libraries
 #
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
@@ -143,6 +144,7 @@ Dane SNMP MIB dla Corosync.
 %{__automake}
 %configure \
 	BASHPATH=/bin/bash \
+	%{__enable_disable static_libs static} \
 	%{?with_augeas:--enable-augeas} \
 	%{?with_dbus:--enable-dbus} \
 	%{?with_libcgroup:--enable-libcgroup} \
@@ -360,6 +362,7 @@ fi
 %{_mandir}/man3/sam_*.3*
 %{_mandir}/man3/votequorum_*.3*
 
+%if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libcfg.a
@@ -370,6 +373,7 @@ fi
 %{_libdir}/libquorum.a
 %{_libdir}/libtotem_pg.a
 %{_libdir}/libvotequorum.a
+%endif
 
 %if %{with testagents}
 %files testagents
