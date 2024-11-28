@@ -14,17 +14,17 @@
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
-Version:	3.1.8
+Version:	3.1.9
 Release:	1
 License:	BSD
 Group:		Base
 Source0:	https://corosync.org/corosync/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	c79b8d13b2a6e6ad29b23869aedf18e4
+# Source0-md5:	4d2ec0131fbce1e30773903a19d3f064
 Source1:	%{name}.init
 Source2:	%{name}-notifyd.init
 Source3:	%{name}-notifyd.sysconfig
 URL:		https://www.corosync.org/
-BuildRequires:	autoconf >= 2.61
+BuildRequires:	autoconf >= 2.69
 BuildRequires:	automake >= 1:1.11
 %{?with_dbus:BuildRequires:	dbus-devel}
 %{?with_apidocs:BuildRequires:	doxygen}
@@ -253,7 +253,7 @@ fi
 %{_datadir}/augeas/lenses/tests/test_corosync.aug
 %endif
 %if %{with dbus}
-/etc/dbus-1/system.d/corosync-signals.conf
+%{_datadir}/dbus-1/system.d/corosync-signals.conf
 %endif
 %dir /var/lib/corosync
 %attr(700,root,root) %dir /var/log/cluster
