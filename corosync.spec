@@ -10,6 +10,7 @@
 %bcond_without	monitoring	# resource monitoring
 %bcond_without	xmlconf		# XML configuration support
 %bcond_without	static_libs	# static libraries
+%bcond_without	systemd		# systemd
 #
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
@@ -40,7 +41,7 @@ BuildRequires:	pkgconfig
 %{?with_vqsim:BuildRequires:	readline-devel}
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.644
-BuildRequires:	systemd-devel >= 1:209
+%{?with_systemd:BuildRequires:	systemd-devel >= 1:209}
 # only for cpghum test program
 #BuildRequires:	zlib-devel
 %{?with_xmlconf:Requires:	libxslt-progs}
@@ -144,7 +145,7 @@ Dane SNMP MIB dla Corosync.
 	%{?with_nozzle:--enable-nozzle} \
 	--disable-silent-rules \
 	%{?with_snmp:--enable-snmp} \
-	--enable-systemd \
+	%{__enable_disable systemd} \
 	%{?with_vqsim:--enable-vqsim} \
 	%{?with_watchdog:--enable-watchdog} \
 	%{?with_xmlconf:--enable-xmlconf} \
@@ -214,8 +215,10 @@ fi
 %dir %{_sysconfdir}/corosync
 %dir %{_sysconfdir}/corosync/service.d
 %dir %{_sysconfdir}/corosync/uidgid.d
+%if %{with systemd}
 %{systemdunitdir}/corosync.service
 %{systemdunitdir}/corosync-notifyd.service
+%endif
 %verify(not md5 mtime size) %config(noreplace) %{_sysconfdir}/corosync/corosync.conf
 %attr(755,root,root) %{_bindir}/corosync-blackbox
 %attr(755,root,root) %{_sbindir}/corosync
