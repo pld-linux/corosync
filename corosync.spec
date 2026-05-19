@@ -15,12 +15,12 @@
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
-Version:	3.1.9
-Release:	2
+Version:	3.1.10
+Release:	1
 License:	BSD
 Group:		Base
 Source0:	https://corosync.org/corosync/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	4d2ec0131fbce1e30773903a19d3f064
+# Source0-md5:	d9371471c94ebb63e242a9880c5aa52d
 Source1:	%{name}.init
 Source2:	%{name}-notifyd.init
 Source3:	%{name}-notifyd.sysconfig
@@ -263,30 +263,30 @@ fi
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libcfg.so.7.*.*
-%attr(755,root,root) %ghost %{_libdir}/libcfg.so.7
-%attr(755,root,root) %{_libdir}/libcmap.so.4.*.*
-%attr(755,root,root) %ghost %{_libdir}/libcmap.so.4
-%attr(755,root,root) %{_libdir}/libcorosync_common.so.4.*.*
-%attr(755,root,root) %ghost %{_libdir}/libcorosync_common.so.4
-%attr(755,root,root) %{_libdir}/libcpg.so.4.*.*
-%attr(755,root,root) %ghost %{_libdir}/libcpg.so.4
-%attr(755,root,root) %{_libdir}/libsam.so.4.*.*
-%attr(755,root,root) %ghost %{_libdir}/libsam.so.4
-%attr(755,root,root) %{_libdir}/libquorum.so.5.*.*
-%attr(755,root,root) %ghost %{_libdir}/libquorum.so.5
-%attr(755,root,root) %{_libdir}/libvotequorum.so.8.*.*
-%attr(755,root,root) %ghost %{_libdir}/libvotequorum.so.8
+%{_libdir}/libcfg.so.7.*.*
+%ghost %{_libdir}/libcfg.so.7
+%{_libdir}/libcmap.so.4.*.*
+%ghost %{_libdir}/libcmap.so.4
+%{_libdir}/libcorosync_common.so.4.*.*
+%ghost %{_libdir}/libcorosync_common.so.4
+%{_libdir}/libcpg.so.4.*.*
+%ghost %{_libdir}/libcpg.so.4
+%{_libdir}/libsam.so.4.*.*
+%ghost %{_libdir}/libsam.so.4
+%{_libdir}/libquorum.so.5.*.*
+%ghost %{_libdir}/libquorum.so.5
+%{_libdir}/libvotequorum.so.8.*.*
+%ghost %{_libdir}/libvotequorum.so.8
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libcfg.so
-%attr(755,root,root) %{_libdir}/libcmap.so
-%attr(755,root,root) %{_libdir}/libcorosync_common.so
-%attr(755,root,root) %{_libdir}/libcpg.so
-%attr(755,root,root) %{_libdir}/libsam.so
-%attr(755,root,root) %{_libdir}/libquorum.so
-%attr(755,root,root) %{_libdir}/libvotequorum.so
+%{_libdir}/libcfg.so
+%{_libdir}/libcmap.so
+%{_libdir}/libcorosync_common.so
+%{_libdir}/libcpg.so
+%{_libdir}/libsam.so
+%{_libdir}/libquorum.so
+%{_libdir}/libvotequorum.so
 %{_includedir}/corosync
 %{_pkgconfigdir}/corosync.pc
 %{_pkgconfigdir}/libcfg.pc
