@@ -11,16 +11,18 @@
 %bcond_without	xmlconf		# XML configuration support
 %bcond_without	static_libs	# static libraries
 %bcond_without	systemd		# systemd
+%bcond_with	unencrypted	# allow crypto_cipher and crypto_hash none
+%bcond_with	udpu		# UDP and UDPU transports, need unencrypted
 #
 Summary:	Corosync - OSI Certified implementation of a complete cluster engine
 Summary(pl.UTF-8):	Corosync - implementacja silnika klastrowego certyfikowana przez OSI
 Name:		corosync
-Version:	3.1.10
+Version:	3.2.0
 Release:	1
 License:	BSD
 Group:		Base
 Source0:	https://corosync.org/corosync/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	d9371471c94ebb63e242a9880c5aa52d
+# Source0-md5:	61a1f9afc166cbb321ec01dd51eed4ae
 Source1:	%{name}.init
 Source2:	%{name}-notifyd.init
 Source3:	%{name}-notifyd.sysconfig
@@ -31,12 +33,11 @@ BuildRequires:	automake >= 1:1.11
 %{?with_apidocs:BuildRequires:	doxygen}
 %{?with_apidocs:BuildRequires:	graphviz}
 BuildRequires:	groff
-%{?with_nozzle:BuildRequires:	kronosnet-devel}
+BuildRequires:	kronosnet-devel
 BuildRequires:	libqb-devel
 %{?with_monitoring:BuildRequires:	libstatgrab-devel >= 0.90}
 BuildRequires:	libtool >= 2:2.2.6
 %{?with_snmp:BuildRequires:	net-snmp-devel}
-BuildRequires:	nss-devel
 BuildRequires:	pkgconfig
 %{?with_vqsim:BuildRequires:	readline-devel}
 BuildRequires:	rpm-build >= 4.6
@@ -146,6 +147,8 @@ Dane SNMP MIB dla Corosync.
 	--disable-silent-rules \
 	%{?with_snmp:--enable-snmp} \
 	%{__enable_disable systemd} \
+	%{?with_udpu:--enable-udpu} \
+	%{?with_unencrypted:--enable-unencrypted} \
 	%{?with_vqsim:--enable-vqsim} \
 	%{?with_watchdog:--enable-watchdog} \
 	%{?with_xmlconf:--enable-xmlconf} \
